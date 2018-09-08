@@ -172,7 +172,7 @@ TaskContext taggedContext(taskProcedure, (void *)&buffer);
 taggedContext.tag = NULL;
 ```
 
-One use of the tag is with the `cancel()` methods. If you use this
+One use of the tag is with the `cancelAll()` methods. If you use this
 variation, you can cancel _every_ context with the same tag.
 
 When you initialize a context with an object method, the tag will
@@ -236,6 +236,12 @@ the pool and is available for reuse.
 Many Arduino programmers try to avoid dynamic allocation. If you
 prefer, you can stick to allocating your own contexts. Another option
 is a `StaticContextPool`, which is part of the sample code.
+
+**Note:** All functions that schedule a task without specifying
+a context will cancel _any_ other tasks with the same task procedure
+(same method and object in the case of an object method). If you
+make multiple calls to schedule a certain task, you will end up with
+only one instance of that task.
 
 ## Advanced Features
 
