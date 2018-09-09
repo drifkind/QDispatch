@@ -59,7 +59,7 @@ bool Task::operator==(const Task &rhs) const
 
 // TaskContext
 //
-TaskContext::TaskContext(Task target, void *tag)
+TaskContext::TaskContext(Task target, const void *tag)
 : target(target), tag(tag)
 {
 	queue = NULL;
@@ -146,7 +146,7 @@ void TaskQueue::cancel(TaskContext &context)
 	}
 }
 
-void TaskQueue::cancelAll(void *tag)
+void TaskQueue::cancelAll(const void *tag)
 {
 	TaskContext **ptr = &firstContext;
 
@@ -254,7 +254,7 @@ TaskDispatcher::TaskDispatcher(unsigned long (*timingFunction)(), ContextPool *c
 	schedulingPolicy = INTERVAL;
 }
 
-TaskContext *TaskDispatcher::schedule(long firstInterval, long nextInterval, Task target, void *tag)
+TaskContext *TaskDispatcher::schedule(long firstInterval, long nextInterval, Task target, const void *tag)
 {
 	TaskContext *context = NULL;
 
@@ -269,7 +269,7 @@ TaskContext *TaskDispatcher::schedule(long firstInterval, long nextInterval, Tas
 	return context;
 }
 
-void TaskDispatcher::schedule(TaskContext &context, long firstInterval, long nextInterval, Task target, void *tag)
+void TaskDispatcher::schedule(TaskContext &context, long firstInterval, long nextInterval, Task target, const void *tag)
 {
 	if (firstInterval >= 0) {
 		context.target = target;
@@ -437,7 +437,7 @@ void EventBarrier::signalAll()
 		;
 }
 
-TaskContext *EventBarrier::onSignal(Task target, void *tag, bool repeat)
+TaskContext *EventBarrier::onSignal(Task target, const void *tag, bool repeat)
 {
 	TaskContext *context = NULL;
 
@@ -452,7 +452,7 @@ TaskContext *EventBarrier::onSignal(Task target, void *tag, bool repeat)
 	return context;
 }
 
-void EventBarrier::onSignal(TaskContext *context, Task target, void *tag, bool repeat)
+void EventBarrier::onSignal(TaskContext *context, Task target, const void *tag, bool repeat)
 {
 	context->target = target;
 	context->tag = tag;

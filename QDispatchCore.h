@@ -67,13 +67,13 @@ class TaskContext
 	friend class EventBarrier;
 public:
 	TaskContext() : TaskContext(Task(), (void *)NULL) {}
-	TaskContext(Task target, void *tag = NULL);
+	TaskContext(Task target, const void *tag = NULL);
 	template<class C> TaskContext(void (C::*cf)(), C *c) : TaskContext(Task(cf, c), (void *)c) {}
 	TaskContext(const TaskContext &context) : TaskContext(context.target, context.tag) {}
 	void cancel();
 	bool isPending() const { return queue != NULL; }
 	Task target;
-	void *tag;
+	const void *tag;
 private:
 	TaskQueue *queue;
 	TaskContext *nextContext;
@@ -118,7 +118,7 @@ public:
 	void cancel(TaskContext &context);
 	void cancelAll(Task target);
 	template<class C> void cancelAll(void (C::*cf)(), C *c) { cancelAll(Task(cf, c)); }
-	void cancelAll(void *tag);
+	void cancelAll(const void *tag);
 	void cancelAll();
 	class iterator
 	{
@@ -158,15 +158,15 @@ public:
 	static unsigned long millis();
 	explicit TaskDispatcher(ContextPool *contextPool) : TaskDispatcher(NULL, contextPool) {}
 	TaskDispatcher(unsigned long (*timingFunction)() = NULL, ContextPool *contextPool = NULL);
-	TaskContext *callAfter(long interval, Task target, void *tag = NULL) { return schedule(interval, -1, target, tag); }
-	TaskContext *callEvery(long interval, Task target, void *tag = NULL) { return schedule(0, interval, target, tag); }
-	TaskContext *schedule(long firstInterval, long nextInterval, Task target, void *tag = NULL);
+	TaskContext *callAfter(long interval, Task target, const void *tag = NULL) { return schedule(interval, -1, target, tag); }
+	TaskContext *callEvery(long interval, Task target, const void *tag = NULL) { return schedule(0, interval, target, tag); }
+	TaskContext *schedule(long firstInterval, long nextInterval, Task target, const void *tag = NULL);
 	template<class C> TaskContext *callAfter(long interval, void (C::*cf)(), C *c) { return callAfter(interval, Task(cf, c), (void *)c); }
 	template<class C> TaskContext *callEvery(long interval, void (C::*cf)(), C *c) { return callEvery(interval, Task(cf, c), (void *)c); }
 	template<class C> TaskContext *schedule(long firstInterval, long nextInterval, void (C::*cf)(), C *c) { return schedule(firstInterval, nextInterval, Task(cf, c), (void *)c); }
-	void callAfter(TaskContext &context, long interval, Task target, void *tag = NULL) { schedule(context, interval, -1, target, tag); }
-	void callEvery(TaskContext &context, long interval, Task target, void *tag = NULL) { schedule(context, 0, interval, target, tag); }
-	void schedule(TaskContext &context, long firstInterval, long nextInterval, Task target, void *tag = NULL);
+	void callAfter(TaskContext &context, long interval, Task target, const void *tag = NULL) { schedule(context, interval, -1, target, tag); }
+	void callEvery(TaskContext &context, long interval, Task target, const void *tag = NULL) { schedule(context, 0, interval, target, tag); }
+	void schedule(TaskContext &context, long firstInterval, long nextInterval, Task target, const void *tag = NULL);
 	template<class C> void callAfter(TaskContext &context, long interval, void (C::*cf)(), C *c) { callAfter(context, interval, Task(cf, c), (void *)c); }
 	template<class C> void callEvery(TaskContext &context, long interval, void (C::*cf)(), C *c) { callEvery(context, interval, Task(cf, c), (void *)c); }
 	template<class C> void schedule(TaskContext &context, long firstInterval, long nextInterval, void (C::*cf)(), C *c) { schedule(context, firstInterval, nextInterval, Task(cf, c), (void *)c); }
@@ -190,12 +190,12 @@ class EventBarrier : public TaskQueue
 public:
 	static const long FOREVER = -1;
 	explicit EventBarrier(TaskDispatcher &dispatcher);
-	TaskContext *when(Task target, void *tag = NULL) { return onSignal(target, tag, false); }
-	TaskContext *whenever(Task target, void *tag = NULL) { return onSignal(target, tag, true); }
+	TaskContext *when(Task target, const void *tag = NULL) { return onSignal(target, tag, false); }
+	TaskContext *whenever(Task target, const void *tag = NULL) { return onSignal(target, tag, true); }
 	template<class C> TaskContext *when(void (C::*cf)(), C *c) { return when(Task(cf, c), (void *)c); }
 	template<class C> TaskContext *whenever(void (C::*cf)(), C *c) { return whenever(Task(cf, c), (void *)c); }
-	void when(TaskContext &context, Task target, void *tag = NULL) { onSignal(&context, target, tag, false); }
-	void whenever(TaskContext &context, Task target, void *tag = NULL) { onSignal(&context, target, tag, true); }
+	void when(TaskContext &context, Task target, const void *tag = NULL) { onSignal(&context, target, tag, false); }
+	void whenever(TaskContext &context, Task target, const void *tag = NULL) { onSignal(&context, target, tag, true); }
 	template<class C> void when(TaskContext &context, void (C::*cf)(), C *c) { when(context, Task(cf, c), (void *)c); }
 	template<class C> void whenever(TaskContext &context, void (C::*cf)(), C *c) { whenever(context, Task(cf, c), (void *)c); }
 	void when(TaskContext &context) { onSignal(&context, false); }
@@ -208,8 +208,8 @@ protected:
 	virtual void recycleContext(TaskContext *context);
 private:
 	EventBarrier(const EventBarrier &);
-	TaskContext *onSignal(Task target, void *tag, bool repeat);
-	void onSignal(TaskContext *context, Task target, void *tag, bool repeat);
+	TaskContext *onSignal(Task target, const void *tag, bool repeat);
+	void onSignal(TaskContext *context, Task target, const void *tag, bool repeat);
 	void onSignal(TaskContext *context, bool repeat);
 };
 
