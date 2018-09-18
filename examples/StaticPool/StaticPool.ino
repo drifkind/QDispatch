@@ -17,7 +17,7 @@
 StaticContextPool<POOL_SIZE> contextPool;
 TaskDispatcher dispatcher(&contextPool);
 
-# The rest of this is just the "QBlink" sample.
+// The rest of this is just the "QBlink" sample.
 
 void setup()
 {

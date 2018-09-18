@@ -29,7 +29,7 @@
 
 #include <QDispatch.h>
 
-class StaticPoolBase : ContextPool {
+class StaticPoolBase : public ContextPool {
 protected:
   StaticPoolBase(TaskContext *block, unsigned blockCount);
   virtual TaskContext *fetchCore();
@@ -39,9 +39,9 @@ private:
   unsigned nextIndex;
 };
 
-template<unsigned n> StaticContextPool : StaticPoolBase {
+template<unsigned n> class StaticContextPool : public StaticPoolBase {
 public:
-  StaticContextPool() : StaticPoolBase(staticBlock, n);
+  StaticContextPool() : StaticPoolBase(staticBlock, n) {}
 private:
   TaskContext staticBlock[n];
 };

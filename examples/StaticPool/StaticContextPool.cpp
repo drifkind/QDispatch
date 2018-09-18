@@ -43,7 +43,7 @@ TaskContext * StaticPoolBase::fetchCore()
   
   do {
 
-    TaskContext *context = block[nextIndex];
+    TaskContext *context = &block[nextIndex];
 
     if (++nextIndex >= blockCount)
       nextIndex = 0;
