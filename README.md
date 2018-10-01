@@ -1,7 +1,5 @@
 # QDispatch - Synchronous Task Library
 
-**Note: This library is not yet released.**
-
 `QDispatch` is a synchronous task library for Arduino (and compatible
 devices). "Synchronous" means that, once a task starts, it has full control of the
 processor until it finishes. This can also be called "cooperative
