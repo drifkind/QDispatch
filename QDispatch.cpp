@@ -4,26 +4,26 @@
  *  13 Oct 2017 David Rifkind <drifkind@acm.org>
  *
  *  This software is licensed under the MIT license.
- *  
+ *
  *  Copyright (c) 2018 David Rifkind
- *  
+ *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- *  SOFTWARE. 
+ *  SOFTWARE.
  */
 
 #include "QDispatchCore.h"
@@ -306,13 +306,13 @@ bool TaskDispatcher::run()
 
 	if (context->repeatInterval < 0 && context->signalEvent == NULL)
 		context->queue = NULL;
-		
+
 	// If context->queue is still set the context is still marked as busy
 	// and won't be recycled while the task is running.
 
 	if (context->target)
 		context->target();
-		
+
 	// We delayed rescheduling until now so that the task would not be
 	// called recursively if things get funny. Now we have to make sure
 	// that it was not canceled or reused in the meantime.
@@ -326,7 +326,7 @@ bool TaskDispatcher::run()
 			unsigned long then = now;
 			now = timingFunction();
 			long overrun;
-			
+
 			switch (schedulingPolicy) {
 			case INTERVAL:
 			default:
@@ -426,7 +426,7 @@ bool EventBarrier::signal()
 		firstContext = context->nextContext;
 		dispatcher.recycleContext(context);
 		return true;
-	} 
+	}
 
 	return false;
 }
