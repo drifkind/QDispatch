@@ -6,12 +6,11 @@
 // 11 Sep 2018 <drifkind@acm.org>
 //
 
-// This example contains a ContextPool implementation that allocates a
+// This example uses a ContextPool implementation that allocates a
 // fixed block of memory at compile time, so you can use a context pool
 // without the evil of dynamic allocation (if it is evil)
 
 #include <QDispatch.h>
-#include "StaticContextPool.h"
 
 #define POOL_SIZE 5
 StaticContextPool<POOL_SIZE> contextPool;

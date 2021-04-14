@@ -112,6 +112,23 @@ private:
 	unsigned poolCount;
 };
 
+class StaticPoolBase : public ContextPool {
+protected:
+  StaticPoolBase(TaskContext *block, unsigned blockCount);
+  virtual TaskContext *fetchCore();
+private:
+  TaskContext * const block;
+  unsigned const blockCount;
+  unsigned nextIndex;
+};
+
+template<unsigned n> class StaticContextPool : public StaticPoolBase {
+public:
+  StaticContextPool() : StaticPoolBase(staticBlock, n) {}
+private:
+  TaskContext staticBlock[n];
+};
+
 class TaskQueue
 {
 public:

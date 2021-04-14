@@ -127,6 +127,37 @@ TaskContext *DynamicContextPool::fetchCore()
 }
 
 
+// StaticPoolBase
+//
+StaticPoolBase::StaticPoolBase(TaskContext *block, unsigned blockCount)
+: block(block), blockCount(blockCount)
+{
+  nextIndex = 0;
+}
+
+
+TaskContext * StaticPoolBase::fetchCore()
+{
+  if (blockCount == 0)
+    return NULL;
+
+  unsigned startIndex = nextIndex;
+
+  do {
+
+    TaskContext *context = &block[nextIndex];
+
+    if (++nextIndex >= blockCount)
+      nextIndex = 0;
+
+    if (!context->isPending())
+      return context;
+
+  } while (nextIndex != startIndex);
+
+  return NULL;
+}
+
 // TaskQueue
 //
 TaskQueue::TaskQueue()
