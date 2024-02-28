@@ -29,6 +29,18 @@ class defined in the header, the library will link automatically.
 #include <QDispatch.h>
 ```
 
+Everything defined in the library is in the `QDispatch` namespace, and all the real
+declarations are in `QDispatchCore.h`. `QDispatch.h` contains little more than:
+
+```c++
+#include "QDispatchCore.h"
+using namespace QDispatch;
+```
+
+so you can skip it to keep your own namespace clean. Just add a lot of `QDispatch::`
+to your code.
+
+
 ## Getting Started
 
 There are three important classes defined in `QDispatch.h`:
@@ -149,15 +161,19 @@ object.
 ```c++
 class MyClass {
     void taskMethod();
+    static void staticMethod();
 };
 
 MyClass myObject;
 TaskContext objectContext(&MyClass::taskMethod, &myObject);
+TaskContext staticContext(&MyClass::staticMethod);
 ```
 
 The (tortured) syntax above is the C++ way to specify a pointer to
 a method. Fortunately, you only have to remember this one bit of
-syntax, and do not have to understand it.
+syntax, and do not have to understand it. Note that a static class 
+method is a perfectly ordinary function with a really weird name, and
+does _not_ need an object pointer.
 
 ### Context Tags
 
@@ -208,7 +224,7 @@ ignore them. This is the function of a context pool.
 
 ```c++
 DynamicContextPool contextPool;
-TaskDispatcher(&contextPool);
+TaskDispatcher dispatcher(&contextPool);
 ```
 
 Now you can use another set of variations on the dispatcher and 
@@ -272,7 +288,7 @@ several times a millisecond. That is only possible if no task ever
 takes more than a fraction of a millisecond. Otherwise a task may
 not start on time, and timing errors occur and can build up.
 
-There are four choices for scheduling policy, depening on how
+There are three choices for scheduling policy, depending on how
 critical exact timing is in your application:
 
 - INTERVAL: The repeat interval for a task is measured from the
@@ -338,6 +354,19 @@ The important points are:
 returned. So no task will be called recursively.
 
 If you try this, I would be interested to hear about it.
+
+## Things That Aren't Very Good
+
+The motivation for `QDispatch` was to write a scheduler where you could
+ignore task contexts. That produced the context pool, but then you have
+to choose between dynamic and static (and null) pools. I didn't designate
+a default pool, so I didn't create a default dispatcher, so you can't write
+large programs or, especially, library code without hand-wringing.
+
+Later it became obvious that you had to be able to signal an event from an
+interrupt, but though there are possible ways to do it, they all make me cry.
+
+I'm working on fancier systems now, and you should expect no further changes.
 
 ## Last Words
 
