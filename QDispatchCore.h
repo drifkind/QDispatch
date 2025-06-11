@@ -29,7 +29,13 @@
 #ifndef QDispatchCore_h
 #define QDispatchCore_h
 
+#if defined(ESP_PLATFORM)
+#include <cstddef>
+#include <cstdint>
+#include <esp_timer.h>
+#else
 #include <Arduino.h>
+#endif
 
 namespace QDispatch {
 
