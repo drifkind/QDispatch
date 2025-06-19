@@ -276,7 +276,11 @@ TaskContext &TaskQueue::iterator::operator*() const
 //
 unsigned long TaskDispatcher::millis()
 {
-	return ::millis();
+#if defined(ESP_PLATFORM)
+  return esp_timer_get_time() / 1000;
+#else
+  return ::millis();
+#endif
 }
 
 TaskDispatcher::TaskDispatcher(unsigned long (*timingFunction)(), ContextPool *contextPool)
